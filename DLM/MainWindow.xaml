@@ -1,0 +1,81 @@
+﻿<Window x:Class="DLM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Widget"
+        Width="500"
+        Height="500"
+
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="False">
+
+    <Border CornerRadius="15"
+            Background="#AA1E1E1E"
+            Padding="10">
+
+        <Grid HorizontalAlignment="Stretch" 
+              VerticalAlignment="Stretch">
+            
+            <Grid HorizontalAlignment="Stretch" 
+                  Height="60" 
+                  VerticalAlignment="Bottom">
+                
+                <Button Width="60" HorizontalAlignment="Right" Margin="0,0,5,5" Click="AddButton_Click" >
+                    <TextBlock Text="Add" FontSize="25" />
+                </Button>
+                
+            </Grid>
+
+            <Grid HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Stretch"
+                  Margin="0,0,0,65">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" >
+                    <StackPanel
+                        Orientation="Vertical"
+                        Name="Button_Stackpanel"
+                        >
+                    </StackPanel>
+                </ScrollViewer>
+
+            </Grid>
+
+            <Grid  Name="LinkCreator" 
+                   Width="250" 
+                   Height="250" 
+                   Background="#212121"
+                   Visibility="Collapsed"
+                   >
+                <Button  Height="50" 
+                         Background="WhiteSmoke"
+                         VerticalAlignment="Bottom"
+                         Click="DoneButton"
+                         >
+                    Done
+                </Button>
+                <TextBox Height="30"
+                         TextAlignment="Left"
+                         VerticalAlignment="Center"
+                         Margin="0,-60,0,0"
+                         Name="Link_Text_box"
+                         
+                         >
+                    link
+                </TextBox>
+                
+                <TextBox Height="30"
+                         TextAlignment="Left"
+                         VerticalAlignment="Center"
+                         Margin="0,20,0,0"
+                         Name="Name_Text_Box"
+                         >
+                    name
+                </TextBox>
+            </Grid>
+            
+        </Grid>
+
+    </Border>
+</Window>
