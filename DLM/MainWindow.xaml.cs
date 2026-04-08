@@ -19,9 +19,6 @@ using Path = System.IO.Path;
 
 namespace DLM
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
 
@@ -35,7 +32,9 @@ namespace DLM
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
-        LinksClass links = new();
+        CategoryList Categories = new();
+        public Category DisplatedCategory = new Category();
+        public Button SelectedButton;
 
         public MainWindow()
         {
@@ -43,6 +42,8 @@ namespace DLM
 
             Loaded += MainWindow_Loaded;
             LoadLinks();
+            LoadCategories();
+            
 
             Left = SystemParameters.WorkArea.Width - Width;
             Top = 0;
@@ -73,26 +74,63 @@ namespace DLM
 
         private void DoneButton(object sender, RoutedEventArgs e)
         {
-            CreateLinkButton(Link_Text_box.Text, Name_Text_Box.Text);
-            LinkCreator.Visibility = Visibility.Collapsed;
-            ButtonL btnLink = new();
-            btnLink.Links = Link_Text_box.Text;
-            btnLink.Name = Name_Text_Box.Text; ;
-            links.Linki.Add(btnLink);
-            Name_Text_Box.Text = "name";
-            Link_Text_box.Text = "link";
-            SaveLinks();
+            try
+            {
+                if (IsCategoryCheck.IsChecked.Value)
+                {
+                    CreateCategory(Name_Text_Box.Text);
+                }
+                else
+                {
+                    CreateLinkButton(Link_Text_box.Text, Name_Text_Box.Text);
+                    LinkCreator.Visibility = Visibility.Collapsed;
+                    ButtonL btnLink = new();
+                    btnLink.Links = Link_Text_box.Text;
+                    btnLink.Name = Name_Text_Box.Text; ;
+                    DisplatedCategory.Links.Add(btnLink);
+                }
+                Name_Text_Box.Text = "name";
+                Link_Text_box.Text = "link";
+                IsCategoryCheck.IsChecked = false;
+                LinkCreator.Visibility = Visibility.Collapsed;
+                Save();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
         }
 
-       private void CreateLinkButton(string Link,string Name )
+       private void CreateLinkButton(string Link,string Name)
        {
-            Button btn = new();
-            btn.Height = 60;
-            btn.Margin = new Thickness(0, 15, 0, 15);
-            btn.Tag = Link;
-            btn.Click += openLink;
-            btn.Content = Name;
-            Button_Stackpanel.Children.Add(btn);
+            try
+            {
+                Button btn = new();
+                btn.Height = 60;
+                btn.Margin = new Thickness(0, 6, 0, 7);
+                btn.Tag = Link;
+                btn.Click += openLink;
+                btn.Content = Name;
+                Button_Stackpanel.Children.Add(btn);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+        private void CreateCategory(string Name)
+        {
+            try
+            {
+                Category categoryNew = new();
+                categoryNew.NameCategory = Name;
+                Categories.CatagoriesList.Add(categoryNew);
+                CreateCategoryButton(Name,Categories.CatagoriesList.Count);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
         }
 
         private void openLink(object sender, RoutedEventArgs e)
@@ -112,7 +150,84 @@ namespace DLM
             }
             catch (Exception ex)
             {
-                // log or show a user-friendly message
+            }
+        }
+
+        private void LoadCategoryList(Category Category)
+        {
+            try
+            {
+                DisplatedCategory = Category;
+                Button_Stackpanel.Children.Clear();
+                foreach (var i in DisplatedCategory.Links)
+                {
+                    CreateLinkButton(i.Links, i.Name);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+
+        private void LoadCategories()
+        {
+            int index = 0;
+            try
+            {
+                foreach (var i in Categories.CatagoriesList)
+                {
+                    CreateCategoryButton(i.NameCategory,index);
+                    index++;
+                }
+                if (CategoriePanel.Children.Count > 0)
+                {
+                    Button btn = (Button)CategoriePanel.Children[1];
+                    btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC"));
+                    SelectedButton = btn;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+
+        private void CreateCategoryButton(string categoryName,int index)
+        {
+            try
+            {
+                Button btn = new()
+                {
+                    Height = 60,
+                    Width = 60,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    Margin = new Thickness(3, 0, 3, 0),
+                    Content = categoryName,
+                    Tag = index
+                };
+                btn.Click += CategoryButtonClicked;
+                CategoriePanel.Children.Add(btn);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+
+        private void CategoryButtonClicked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Button btn = (Button)sender;
+                SelectedButton.Background = btn.Background;
+                btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC"));
+                SelectedButton = btn;
+                LoadCategoryList(Categories.CatagoriesList[(int)btn.Tag]);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
             }
         }
 
@@ -122,36 +237,39 @@ namespace DLM
             string filePath = Path.Combine(AppContext.BaseDirectory, fileName);
             if (File.Exists(filePath))
             {
-                links = JsonSerializer.Deserialize<LinksClass>(File.ReadAllText(filePath)) ?? new();
-                if (links != null) {
-
-                    foreach (var i in links.Linki)
-                    {
-                        CreateLinkButton(i.Links, i.Name);
-                    }
-                }
+                Categories = JsonSerializer.Deserialize<CategoryList>(File.ReadAllText(filePath)) ?? new();
             }
             else
             {
                 using FileStream createStream = File.Create(filePath);
-                JsonSerializer.SerializeAsync(createStream, links);
+                JsonSerializer.SerializeAsync(createStream, Categories);
             }
         }
-
-        private void SaveLinks()
+                           
+        private void Save()
         {
             string fileName = "Links.json";
             string filePath = Path.Combine(AppContext.BaseDirectory, fileName);
-            string json = JsonSerializer.Serialize(links);
+            string json = JsonSerializer.Serialize(Categories);
             File.WriteAllTextAsync(filePath, json);
         }
 
+        private void IsCategory(object sender, RoutedEventArgs e)
+        {
+            Link_Text_box.IsEnabled = IsCategoryCheck.IsChecked.Value;
+        }
     }
 }
 
-public class LinksClass
+public class Category
 {
-    public List<ButtonL>? Linki { get; set; } = new();
+    public List<ButtonL>? Links { get; set; } = new();
+    public string NameCategory { get; set; }
+}
+
+public class CategoryList
+{
+    public List<Category>? CatagoriesList { get; set; } = new();
 }
 
 public struct ButtonL

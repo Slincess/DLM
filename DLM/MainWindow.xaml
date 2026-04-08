@@ -19,15 +19,24 @@
         <Grid HorizontalAlignment="Stretch" 
               VerticalAlignment="Stretch">
             
-            <Grid HorizontalAlignment="Stretch" 
-                  Height="60" 
-                  VerticalAlignment="Bottom">
-                
-                <Button Width="60" HorizontalAlignment="Right" Margin="0,0,5,5" Click="AddButton_Click" >
-                    <TextBlock Text="Add" FontSize="25" />
+            <StackPanel HorizontalAlignment="Stretch"
+                        Height="60"
+                        VerticalAlignment="Bottom"
+                        Orientation="Horizontal"
+                        FlowDirection="RightToLeft"
+                        Name="CategoriePanel"
+                        >
+                <Button Width="60" 
+                        Height="60"
+                        HorizontalAlignment="Right" 
+                        Margin="3,0,2,0" 
+                        Click="AddButton_Click" 
+                        Content="Add"
+                        >
                 </Button>
-                
-            </Grid>
+
+
+            </StackPanel>
 
             <Grid HorizontalAlignment="Stretch" 
                   VerticalAlignment="Stretch"
@@ -73,6 +82,14 @@
                          >
                     name
                 </TextBox>
+
+                <CheckBox VerticalAlignment="Top" 
+                          Margin="0,52,0,0" 
+                          Content="Is Catogory"
+                          Foreground="WhiteSmoke"
+                          Checked="IsCategory"
+                          Name="IsCategoryCheck">
+                </CheckBox>
             </Grid>
             
         </Grid>
