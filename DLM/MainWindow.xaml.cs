@@ -105,6 +105,7 @@ namespace DLM
        {
             try
             {
+                /*
                 Button btn = new();
                 btn.Height = 60;
                 btn.Margin = new Thickness(0, 6, 0, 7);
@@ -112,6 +113,7 @@ namespace DLM
                 btn.Click += openLink;
                 btn.Content = Name;
                 Button_Stackpanel.Children.Add(btn);
+                */
             }
             catch (Exception e)
             {
