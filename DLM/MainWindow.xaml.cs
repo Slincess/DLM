@@ -105,15 +105,14 @@ namespace DLM
        {
             try
             {
-                /*
-                Button btn = new();
-                btn.Height = 60;
-                btn.Margin = new Thickness(0, 6, 0, 7);
-                btn.Tag = Link;
-                btn.Click += openLink;
-                btn.Content = Name;
+                LinkButton btn = new();
+                Button LinkBtn = btn.LinkOpenButton;
+                Button EditBtn = btn.EditButton;
+                LinkBtn.Tag = Link;
+                LinkBtn.Content = Name;
+                LinkBtn.Click += openLink;
+                btn.Margin = new Thickness(0,6,0,7);
                 Button_Stackpanel.Children.Add(btn);
-                */
             }
             catch (Exception e)
             {
