@@ -60,7 +60,109 @@ namespace DLM
             SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
         }
 
-        // drag window
+        #region Load Funcs
+
+        //Loads the buttons in the Category to Button_Stackpanel
+        private void LoadCategoryList(Category Category)
+        {
+            try
+            {
+                DisplatedCategory = Category;
+                Button_Stackpanel.Children.Clear();
+                foreach (var i in DisplatedCategory.Links)
+                {
+                    CreateLinkButton(i.Links, i.Name);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+
+        //Loads the Categories to CategoriePanel 
+        private void LoadCategories()
+        {
+            int index = 0;
+            try
+            {
+                foreach (var i in Categories.CatagoriesList)
+                {
+                    CreateCategoryButton(i.NameCategory, index);
+                    index++;
+                }
+                if (CategoriePanel.Children.Count > 0)
+                {
+                    Button btn = (Button)CategoriePanel.Children[1];
+                    btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC"));
+                    SelectedButton = btn;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+        #endregion
+
+        #region Create Funcs
+        private void CreateCategoryButton(string categoryName, int index)
+        {
+            try
+            {
+                Button btn = new()
+                {
+                    Height = 60,
+                    Width = 60,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    Margin = new Thickness(3, 0, 3, 0),
+                    Content = categoryName,
+                    Tag = index
+                };
+                btn.Click += CategoryButtonClicked;
+                CategoriePanel.Children.Add(btn);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+        private void CreateLinkButton(string Link, string Name)
+        {
+            try
+            {
+                LinkButton btn = new();
+                Button LinkBtn = btn.LinkOpenButton;
+                Button EditBtn = btn.EditButton;
+                LinkBtn.Tag = Link;
+                LinkBtn.Content = Name;
+                LinkBtn.Click += openLink;
+                btn.Margin = new Thickness(0, 6, 0, 7);
+                Button_Stackpanel.Children.Add(btn);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+        private void CreateCategory(string Name)
+        {
+            try
+            {
+                Category categoryNew = new();
+                categoryNew.NameCategory = Name;
+                Categories.CatagoriesList.Add(categoryNew);
+                CreateCategoryButton(Name, Categories.CatagoriesList.Count);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+
+        #endregion
+
+        #region Click Events
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             DragMove();
@@ -101,36 +203,19 @@ namespace DLM
             }
         }
 
-       private void CreateLinkButton(string Link,string Name)
-       {
-            try
-            {
-                LinkButton btn = new();
-                Button LinkBtn = btn.LinkOpenButton;
-                Button EditBtn = btn.EditButton;
-                LinkBtn.Tag = Link;
-                LinkBtn.Content = Name;
-                LinkBtn.Click += openLink;
-                btn.Margin = new Thickness(0,6,0,7);
-                Button_Stackpanel.Children.Add(btn);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-            }
-        }
-        private void CreateCategory(string Name)
+        private void CategoryButtonClicked(object sender, RoutedEventArgs e)
         {
             try
             {
-                Category categoryNew = new();
-                categoryNew.NameCategory = Name;
-                Categories.CatagoriesList.Add(categoryNew);
-                CreateCategoryButton(Name,Categories.CatagoriesList.Count);
+                Button btn = (Button)sender;
+                SelectedButton.Background = btn.Background;
+                btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC"));
+                SelectedButton = btn;
+                LoadCategoryList(Categories.CatagoriesList[(int)btn.Tag]);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Debug.WriteLine(e);
+                Debug.WriteLine(ex);
             }
         }
 
@@ -154,84 +239,13 @@ namespace DLM
             }
         }
 
-        private void LoadCategoryList(Category Category)
+        private void IsCategory(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                DisplatedCategory = Category;
-                Button_Stackpanel.Children.Clear();
-                foreach (var i in DisplatedCategory.Links)
-                {
-                    CreateLinkButton(i.Links, i.Name);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-            }
+            Link_Text_box.IsEnabled = IsCategoryCheck.IsChecked.Value;
         }
+        #endregion
 
-        private void LoadCategories()
-        {
-            int index = 0;
-            try
-            {
-                foreach (var i in Categories.CatagoriesList)
-                {
-                    CreateCategoryButton(i.NameCategory,index);
-                    index++;
-                }
-                if (CategoriePanel.Children.Count > 0)
-                {
-                    Button btn = (Button)CategoriePanel.Children[1];
-                    btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC"));
-                    SelectedButton = btn;
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-            }
-        }
-
-        private void CreateCategoryButton(string categoryName,int index)
-        {
-            try
-            {
-                Button btn = new()
-                {
-                    Height = 60,
-                    Width = 60,
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    Margin = new Thickness(3, 0, 3, 0),
-                    Content = categoryName,
-                    Tag = index
-                };
-                btn.Click += CategoryButtonClicked;
-                CategoriePanel.Children.Add(btn);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-            }
-        }
-
-        private void CategoryButtonClicked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Button btn = (Button)sender;
-                SelectedButton.Background = btn.Background;
-                btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC"));
-                SelectedButton = btn;
-                LoadCategoryList(Categories.CatagoriesList[(int)btn.Tag]);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-        }
-
+        #region Save Load Json
         private void LoadLinks()
         {
             string fileName = "Links.json";
@@ -246,7 +260,7 @@ namespace DLM
                 JsonSerializer.SerializeAsync(createStream, Categories);
             }
         }
-                           
+
         private void Save()
         {
             string fileName = "Links.json";
@@ -254,11 +268,7 @@ namespace DLM
             string json = JsonSerializer.Serialize(Categories);
             File.WriteAllTextAsync(filePath, json);
         }
-
-        private void IsCategory(object sender, RoutedEventArgs e)
-        {
-            Link_Text_box.IsEnabled = IsCategoryCheck.IsChecked.Value;
-        }
+        #endregion
     }
 }
 

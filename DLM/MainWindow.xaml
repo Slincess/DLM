@@ -47,9 +47,6 @@
                         Orientation="Vertical"
                         Name="Button_Stackpanel"
                         >
-                        <local:LinkButton>
-                            
-                        </local:LinkButton>
                     </StackPanel>
                 </ScrollViewer>
 
@@ -62,9 +59,10 @@
                    Visibility="Collapsed"
                    >
                 <Button  Height="50" 
-                         Background="WhiteSmoke"
                          VerticalAlignment="Bottom"
                          Click="DoneButton"
+                         Background="#FF3C3C3C"
+                         Foreground="WhiteSmoke"
                          >
                     Done
                 </Button>
@@ -73,7 +71,8 @@
                          VerticalAlignment="Center"
                          Margin="0,-60,0,0"
                          Name="Link_Text_box"
-                         
+                         Background="#FF3C3C3C"
+                         Foreground="WhiteSmoke"
                          >
                     link
                 </TextBox>
@@ -83,6 +82,8 @@
                          VerticalAlignment="Center"
                          Margin="0,20,0,0"
                          Name="Name_Text_Box"
+                         Background="#FF3C3C3C"
+                         Foreground="WhiteSmoke"
                          >
                     name
                 </TextBox>
@@ -90,12 +91,51 @@
                 <CheckBox VerticalAlignment="Top" 
                           Margin="0,52,0,0" 
                           Content="Is Catogory"
-                          Foreground="WhiteSmoke"
                           Checked="IsCategory"
+                          Background="#FF3C3C3C"
+                          Foreground="WhiteSmoke"
                           Name="IsCategoryCheck">
+                    
                 </CheckBox>
             </Grid>
-            
+
+            <Grid  Name="EditPanel" 
+                   Width="250" 
+                   Height="250" 
+                   Background="#212121"
+                   Visibility="Collapsed"
+                   >
+                <Button  Height="50" 
+                         Background="#FF3C3C3C"
+                         VerticalAlignment="Bottom"
+                         Click="DoneButton"
+                         Content="Done"
+                         Foreground="WhiteSmoke"
+                         >
+                </Button>
+                <TextBox Height="30"
+                         TextAlignment="Left"
+                         VerticalAlignment="Center"
+                         Margin="0,-60,0,0"
+                         Name="Edit_Link_Box"
+                         Background="#FF3C3C3C"
+                         Foreground="WhiteSmoke"
+                         >
+                    link
+                </TextBox>
+
+                <TextBox Height="30"
+                         TextAlignment="Left"
+                         VerticalAlignment="Center"
+                         Margin="0,20,0,0"
+                         Name="Edit_Name_Box"
+                         Background="#FF3C3C3C"
+                         Foreground="WhiteSmoke"
+                         >
+                    name
+                </TextBox>
+            </Grid>
+
         </Grid>
 
     </Border>
