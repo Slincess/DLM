@@ -136,7 +136,8 @@ namespace DLM
                 Button EditBtn = btn.EditButton;
                 LinkBtn.Tag = Link;
                 LinkBtn.Content = Name;
-                LinkBtn.Click += openLink;
+                LinkBtn.Click += OpenLink;
+                EditBtn.Click += OpenEditPanel;
                 btn.Margin = new Thickness(0, 6, 0, 7);
                 Button_Stackpanel.Children.Add(btn);
             }
@@ -172,6 +173,8 @@ namespace DLM
         {
             if (LinkCreator.IsVisible) LinkCreator.Visibility = Visibility.Collapsed;
             else LinkCreator.Visibility = Visibility.Visible;
+
+            EditPanel.Visibility = Visibility.Collapsed;
         }
 
         private void DoneButton(object sender, RoutedEventArgs e)
@@ -217,9 +220,11 @@ namespace DLM
             {
                 Debug.WriteLine(ex);
             }
+            LinkCreator.Visibility = Visibility.Collapsed;
+            EditPanel.Visibility = Visibility.Collapsed;
         }
 
-        private void openLink(object sender, RoutedEventArgs e)
+        private void OpenLink(object sender, RoutedEventArgs e)
         {
             if (sender is not Button btn) return;
             var url = btn.Tag as string;
@@ -243,6 +248,15 @@ namespace DLM
         {
             Link_Text_box.IsEnabled = IsCategoryCheck.IsChecked.Value;
         }
+
+        private void OpenEditPanel(object sender, RoutedEventArgs e)
+        {
+            if (EditPanel.IsVisible) EditPanel.Visibility = Visibility.Collapsed;
+            else EditPanel.Visibility = Visibility.Visible;
+
+            LinkCreator.Visibility = Visibility.Collapsed;
+        }
+
         #endregion
 
         #region Save Load Json

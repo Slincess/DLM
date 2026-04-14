@@ -20,13 +20,10 @@ namespace DLM
     /// </summary>
     public partial class LinkButton : UserControl
     {
-        
 
         public LinkButton()
         {
             InitializeComponent();
-
-            
         }
 
         public Button GetEditButton() { return (Button)EditButton; }
