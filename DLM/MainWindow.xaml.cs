@@ -72,7 +72,7 @@ namespace DLM
             {
                 DisplatedCategory = Category;
                 Button_Stackpanel.Children.Clear();
-                foreach (var i in DisplatedCategory.Links)
+                foreach (var i in DisplatedCategory.Links.ToArray())
                 {
                     CreateLinkButton(i.Links, i.Name,i);
                 }
