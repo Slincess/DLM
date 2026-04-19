@@ -15,19 +15,36 @@ using System.Windows.Shapes;
 
 namespace DLM
 {
-    /// <summary>
-    /// Interaction logic for LinkButton.xaml
-    /// </summary>
     public partial class LinkButton : UserControl
     {
+
+        Button linkOpenButton;
+        public Buttoninfo thisButtonInfo;
 
         public LinkButton()
         {
             InitializeComponent();
+            linkOpenButton = LinkOpenButton;
         }
 
         public Button GetEditButton() { return (Button)EditButton; }
         public Button GetLinkButton() { return (Button)(LinkOpenButton); }
+
+        public void Edit(string link,string name)
+        {
+            linkOpenButton.Tag = link;
+            thisButtonInfo.Links = link;
+            if (!string.IsNullOrEmpty(name))
+            {
+                linkOpenButton.Content = name;
+                thisButtonInfo.Name = name;
+            }
+        }
+        public void Edit(string link)
+        {
+            linkOpenButton.Tag = link;
+            thisButtonInfo.Links = link;
+        }
 
     }
 }

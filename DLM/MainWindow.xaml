@@ -108,7 +108,7 @@
                 <Button  Height="50" 
                          Background="#FF3C3C3C"
                          VerticalAlignment="Bottom"
-                         Click="DoneButton"
+                         Click="EditDone"
                          Content="Done"
                          Foreground="WhiteSmoke"
                          >

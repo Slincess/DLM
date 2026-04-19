@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
+using System.Xml.Serialization;
 using Path = System.IO.Path;
 
 
@@ -35,6 +36,8 @@ namespace DLM
         CategoryList Categories = new();
         public Category DisplatedCategory = new Category();
         public Button SelectedButton;
+
+        public Buttoninfo EditingButton;
 
         public MainWindow()
         {
@@ -71,7 +74,7 @@ namespace DLM
                 Button_Stackpanel.Children.Clear();
                 foreach (var i in DisplatedCategory.Links)
                 {
-                    CreateLinkButton(i.Links, i.Name);
+                    CreateLinkButton(i.Links, i.Name,i);
                 }
             }
             catch (Exception e)
@@ -127,6 +130,32 @@ namespace DLM
                 Debug.WriteLine(e);
             }
         }
+
+        //creates btn without making a new buttoninfo if it already exist
+        private void CreateLinkButton(string Link, string Name,Buttoninfo info)
+        {
+            try
+            {
+                LinkButton btn = new();
+                Button LinkBtn = btn.LinkOpenButton;
+                Button EditBtn = btn.EditButton;
+                LinkBtn.Tag = Link;
+                LinkBtn.Content = Name;
+                LinkBtn.Click += OpenLink;
+                EditBtn.Click += OpenEditPanel;
+                EditBtn.Tag = btn;
+                btn.Margin = new Thickness(0, 6, 0, 7);
+                btn.thisButtonInfo = info;
+                DisplatedCategory.Links.Add(btn.thisButtonInfo);
+                Button_Stackpanel.Children.Add(btn);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+
+        //creates btn making a new buttoninfo
         private void CreateLinkButton(string Link, string Name)
         {
             try
@@ -138,7 +167,13 @@ namespace DLM
                 LinkBtn.Content = Name;
                 LinkBtn.Click += OpenLink;
                 EditBtn.Click += OpenEditPanel;
+                EditBtn.Tag = btn;
                 btn.Margin = new Thickness(0, 6, 0, 7);
+                Buttoninfo btninfo = new();
+                btninfo.Links = Link_Text_box.Text;
+                btninfo.Name = Name_Text_Box.Text;
+                btn.thisButtonInfo = btninfo;
+                DisplatedCategory.Links.Add(btn.thisButtonInfo);
                 Button_Stackpanel.Children.Add(btn);
             }
             catch (Exception e)
@@ -146,6 +181,7 @@ namespace DLM
                 Debug.WriteLine(e);
             }
         }
+
         private void CreateCategory(string Name)
         {
             try
@@ -189,10 +225,6 @@ namespace DLM
                 {
                     CreateLinkButton(Link_Text_box.Text, Name_Text_Box.Text);
                     LinkCreator.Visibility = Visibility.Collapsed;
-                    ButtonL btnLink = new();
-                    btnLink.Links = Link_Text_box.Text;
-                    btnLink.Name = Name_Text_Box.Text; ;
-                    DisplatedCategory.Links.Add(btnLink);
                 }
                 Name_Text_Box.Text = "name";
                 Link_Text_box.Text = "link";
@@ -253,8 +285,24 @@ namespace DLM
         {
             if (EditPanel.IsVisible) EditPanel.Visibility = Visibility.Collapsed;
             else EditPanel.Visibility = Visibility.Visible;
-
             LinkCreator.Visibility = Visibility.Collapsed;
+
+
+            Button btn = (Button)sender;
+            LinkButton linkbtn = (LinkButton)btn.Tag;
+            Edit_Link_Box.Text = linkbtn.GetLinkButton().Tag.ToString();
+            Edit_Name_Box.Text = linkbtn.GetLinkButton().Content.ToString();
+            EditPanel.Tag = linkbtn;
+        }
+
+        private void EditDone(object sender, RoutedEventArgs e)
+        {
+            LinkButton linkbtn = (LinkButton)EditPanel.Tag;
+            linkbtn.Edit(Edit_Link_Box.Text,Edit_Name_Box.Text);
+            Edit_Link_Box.Text = "link";
+            Edit_Name_Box.Text = "name";
+            EditPanel.Visibility = Visibility.Collapsed;
+            Save();
         }
 
         #endregion
@@ -288,7 +336,7 @@ namespace DLM
 
 public class Category
 {
-    public List<ButtonL>? Links { get; set; } = new();
+    public List<Buttoninfo>? Links { get; set; } = new();
     public string NameCategory { get; set; }
 }
 
@@ -297,7 +345,7 @@ public class CategoryList
     public List<Category>? CatagoriesList { get; set; } = new();
 }
 
-public struct ButtonL
+public class Buttoninfo
 {
     public string Links { get; set; }
     public string Name { get; set; }
