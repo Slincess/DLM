@@ -146,7 +146,6 @@ namespace DLM
                 EditBtn.Tag = btn;
                 btn.Margin = new Thickness(0, 6, 0, 7);
                 btn.thisButtonInfo = info;
-                DisplatedCategory.Links.Add(btn.thisButtonInfo);
                 Button_Stackpanel.Children.Add(btn);
             }
             catch (Exception e)
