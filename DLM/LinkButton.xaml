@@ -57,5 +57,11 @@
             </Button.Template>
         </Button>
 
+        <Border Background="Red"
+                Height="1"
+                VerticalAlignment="Bottom"
+                Name="isOnlineindicator"
+                ></Border>
+
     </Grid>
 </UserControl>
