@@ -33,6 +33,8 @@
                         Margin="3,0,2,0" 
                         Click="AddButton_Click" 
                         Content="Add"
+                        Background="#4F4F4F"
+                        Foreground="WhiteSmoke"
                         >
                 </Button>
 

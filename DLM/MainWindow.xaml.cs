@@ -97,8 +97,9 @@ namespace DLM
                 if (CategoriePanel.Children.Count > 0)
                 {
                     Button btn = (Button)CategoriePanel.Children[1];
-                    btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC"));
+                    btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF454545"));
                     SelectedButton = btn;
+                    LoadCategoryList(Categories.CatagoriesList[0]);
                 }
             }
             catch (Exception e)
@@ -120,7 +121,9 @@ namespace DLM
                     HorizontalAlignment = HorizontalAlignment.Right,
                     Margin = new Thickness(3, 0, 3, 0),
                     Content = categoryName,
-                    Tag = index
+                    Tag = index,
+                    Background = new SolidColorBrush(Color.FromRgb(79, 79, 79)),
+                    Foreground = Brushes.WhiteSmoke
                 };
                 btn.Click += CategoryButtonClicked;
                 CategoriePanel.Children.Add(btn);
@@ -243,7 +246,8 @@ namespace DLM
             {
                 Button btn = (Button)sender;
                 SelectedButton.Background = btn.Background;
-                btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC"));
+                btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF454545"));
+                btn.Foreground = Brushes.WhiteSmoke;
                 SelectedButton = btn;
                 LoadCategoryList(Categories.CatagoriesList[(int)btn.Tag]);
             }
