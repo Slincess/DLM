@@ -151,9 +151,8 @@ namespace DLM
                 EditBtn.Tag = btn;
                 btn.Margin = new Thickness(0, 6, 0, 7);
                 btn.thisButtonInfo = info;
-                if (btn.thisButtonInfo.isOnline) btn.thisButtonInfo.isOnlineindicator.Background = Brushes.Red;
-                else btn.thisButtonInfo.isOnlineindicator.Background = Brushes.Green;
                 Button_Stackpanel.Children.Add(btn);
+                PingLinks(btn.thisButtonInfo);
             }
             catch (Exception e)
             {
@@ -181,6 +180,7 @@ namespace DLM
                 btn.thisButtonInfo = btninfo;
                 DisplatedCategory.Links.Add(btn.thisButtonInfo);
                 Button_Stackpanel.Children.Add(btn);
+                PingLinks(btn.thisButtonInfo);
             }
             catch (Exception e)
             {
@@ -309,12 +309,13 @@ namespace DLM
             Edit_Link_Box.Text = "link";
             Edit_Name_Box.Text = "name";
             EditPanel.Visibility = Visibility.Collapsed;
+            PingLinks(linkbtn.thisButtonInfo);
             Save();
         }
 
         #endregion
 
-        private async Task PingLinks(string link, Border isOnlineindicator, bool isOnline)
+        private async Task PingLinks(Buttoninfo btn)
         {
             try
             {
@@ -323,13 +324,13 @@ namespace DLM
 
                     string host;
 
-                    if (Uri.TryCreate(link, UriKind.Absolute, out Uri uri))
+                    if (Uri.TryCreate(btn.Links, UriKind.Absolute, out Uri uri))
                     {
                         host = uri.Host;
                     }
                     else
                     {
-                        host = link;
+                        host = btn.Links;
                     }
 
                     PingReply reply = await pingSender.SendPingAsync(host);
@@ -338,28 +339,30 @@ namespace DLM
 
                     if (reply.Status == IPStatus.Success)
                     {
-                        await isOnlineindicator.Dispatcher.InvokeAsync(() =>
+                        await btn.isOnlineindicator.Dispatcher.InvokeAsync(() =>
                         {
-                            isOnlineindicator.Background = Brushes.Green;
-                            isOnline = true; 
+                            btn.isOnlineindicator.Background = Brushes.Green;
+                            
                         });
+                        
                     }
                     else
                     {
-                        await isOnlineindicator.Dispatcher.InvokeAsync(() =>
+                        await btn.isOnlineindicator.Dispatcher.InvokeAsync(() =>
                         {
-                            isOnlineindicator.Background = Brushes.Red;
-                            isOnline = false;
+                            btn.isOnlineindicator.Background = Brushes.Red;
+                            
                         });
+                        
                     }
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-                await isOnlineindicator.Dispatcher.InvokeAsync(() =>
+                await btn.isOnlineindicator.Dispatcher.InvokeAsync(() =>
                 {
-                    isOnlineindicator.Background = Brushes.Red;
+                    btn.isOnlineindicator.Background = Brushes.Red;
                 });
                 return;
             }
@@ -373,7 +376,7 @@ namespace DLM
                 {
                     foreach (var link in category.Links.ToArray())
                     {
-                        await Task.Run(() => PingLinks(link.Links, link.isOnlineindicator,link.isOnline));
+                        await Task.Run(() => PingLinks(link));
                         Debug.WriteLine(link.Links + "  pinging");
                     }
                 }
@@ -430,5 +433,4 @@ public class Buttoninfo
     public string Links { get; set; }
     public string Name { get; set; }
     [System.Text.Json.Serialization.JsonIgnore] public Border isOnlineindicator { get; set; }
-    [System.Text.Json.Serialization.JsonIgnore] public bool isOnline { get; set; }
 }
