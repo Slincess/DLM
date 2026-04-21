@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,13 +20,24 @@ namespace DLM
     {
 
         Button linkOpenButton;
-        public Buttoninfo thisButtonInfo;
+        private Buttoninfo _thisButtonInfo;
+        public Buttoninfo thisButtonInfo
+        {
+            get { return _thisButtonInfo; }
+            set
+            {
+                _thisButtonInfo = value;
+                _thisButtonInfo.isOnlineindicator = isOnlineindicator;
+            }
+        }
 
         public LinkButton()
         {
             InitializeComponent();
             linkOpenButton = LinkOpenButton;
         }
+
+        
 
         public Button GetEditButton() { return (Button)EditButton; }
         public Button GetLinkButton() { return (Button)(LinkOpenButton); }

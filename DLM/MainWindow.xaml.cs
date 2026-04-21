@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
@@ -46,6 +47,7 @@ namespace DLM
             Loaded += MainWindow_Loaded;
             LoadLinks();
             LoadCategories();
+            pingTest();
             
 
             Left = SystemParameters.WorkArea.Width - Width;
@@ -310,6 +312,76 @@ namespace DLM
 
         #endregion
 
+        private async Task PingLinks(string link, Border isOnlineindicator)
+        {
+            try
+            {
+                using (Ping pingSender = new Ping())
+                {
+
+                    string host;
+
+                    if (Uri.TryCreate(link, UriKind.Absolute, out Uri uri))
+                    {
+                        host = uri.Host;
+                    }
+                    else
+                    {
+                        host = link;
+                    }
+
+                    PingReply reply = await pingSender.SendPingAsync(host);
+
+
+
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        await isOnlineindicator.Dispatcher.InvokeAsync(() =>
+                        {
+                            isOnlineindicator.Background = Brushes.Green;
+                        });
+                    }
+                    else
+                    {
+                        await isOnlineindicator.Dispatcher.InvokeAsync(() =>
+                        {
+                            isOnlineindicator.Background = Brushes.Red;
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                await isOnlineindicator.Dispatcher.InvokeAsync(() =>
+                {
+                    isOnlineindicator.Background = Brushes.Red;
+                });
+                return;
+            }
+        }
+
+        private async Task pingTest()
+        {
+            try
+            {
+                foreach (var category in Categories.CatagoriesList.ToArray())
+                {
+                    foreach (var link in category.Links.ToArray())
+                    {
+                        await Task.Run(() => PingLinks(link.Links, link.isOnlineindicator));
+                        Debug.WriteLine(link.Links + "  pinging");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            await Task.Delay(300000);
+            pingTest();
+        }
+
         #region Save Load Json
         private void LoadLinks()
         {
@@ -334,6 +406,7 @@ namespace DLM
             File.WriteAllTextAsync(filePath, json);
         }
         #endregion
+
     }
 }
 
@@ -352,4 +425,5 @@ public class Buttoninfo
 {
     public string Links { get; set; }
     public string Name { get; set; }
+    [System.Text.Json.Serialization.JsonIgnore] public Border isOnlineindicator { get; set; }
 }
