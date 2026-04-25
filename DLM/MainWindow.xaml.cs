@@ -195,7 +195,8 @@ namespace DLM
                 Category categoryNew = new();
                 categoryNew.NameCategory = Name;
                 Categories.CatagoriesList.Add(categoryNew);
-                CreateCategoryButton(Name, Categories.CatagoriesList.Count);
+                DisplatedCategory = categoryNew;
+                CreateCategoryButton(Name, Categories.CatagoriesList.Count - 1);
             }
             catch (Exception e)
             {
@@ -253,7 +254,9 @@ namespace DLM
                 btn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF454545"));
                 btn.Foreground = Brushes.WhiteSmoke;
                 SelectedButton = btn;
-                LoadCategoryList(Categories.CatagoriesList[(int)btn.Tag]);
+                int index = int.Parse(btn.Tag.ToString());
+                Debug.WriteLine("Categrory count: " + Categories.CatagoriesList.Count.ToString() + "index: " + btn.Tag.ToString());
+                LoadCategoryList(Categories.CatagoriesList[index]);
             }
             catch (Exception ex)
             {

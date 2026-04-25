@@ -19,27 +19,33 @@
 
         <Grid HorizontalAlignment="Stretch" 
               VerticalAlignment="Stretch">
-            
-            <StackPanel HorizontalAlignment="Stretch"
+
+            <ScrollViewer HorizontalAlignment="Stretch"
                         Height="60"
                         VerticalAlignment="Bottom"
-                        Orientation="Horizontal"
-                        FlowDirection="RightToLeft"
-                        Name="CategoriePanel"
+                         HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Disabled"
                         >
-                <Button Width="60" 
-                        Height="60"
-                        HorizontalAlignment="Right" 
-                        Margin="3,0,2,0" 
-                        Click="AddButton_Click" 
-                        Content="Add"
-                        Background="#4F4F4F"
-                        Foreground="WhiteSmoke"
-                        >
-                </Button>
+                <StackPanel Name="CategoriePanel" 
+                            Orientation="Horizontal"
+                            FlowDirection="RightToLeft"
+                            >
+
+                    <Button Width="60" 
+                            Height="60"
+                            HorizontalAlignment="Right" 
+                            Margin="3,0,2,0" 
+                            Click="AddButton_Click" 
+                            Content="Add"
+                            Background="#4F4F4F"
+                            Foreground="WhiteSmoke"
+                            >
+                    </Button>
 
 
-            </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+            
 
             <Grid HorizontalAlignment="Stretch" 
                   VerticalAlignment="Stretch"

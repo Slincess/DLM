@@ -9,6 +9,7 @@ checks if the website is online (Doesnt work for Errors like "Error 1033" from c
 quick link open <br/>
 categories <br/>
 easy to use <br/>
+Technically, it would also open programs if you put the path to the .exe instead of a link <br/>
 
 # Important
 
